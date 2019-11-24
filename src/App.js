@@ -1,26 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
-import './App.css';
+import './scss/index.scss';
+import Home from './components/Home'
+import { HashRouter as Router, Route, Switch } from 'react-router-dom'
+import Navigation from "./components/Navigation";
+import Contact from "./components/Contact";
 
-function App() {
+export const apiUrl = 'http://localhost:3001';
+
+const App = () => {
+    const [ menu, setMenu ] = useState([]);
+
+    useEffect(() => {
+      fetch(`${apiUrl}/menu`)
+          .then(response => response.json())
+          .then(data => setMenu(data))
+    }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      <Router>
+        <>
+          <Navigation items={menu}/>
+          <Switch>
+            <Route exact path="/" component={Home}/>
+            <Route path="/contact" component={Contact}/>
+          </Switch>
+        </>
+      </Router>
+  )
 }
-
 export default App;
